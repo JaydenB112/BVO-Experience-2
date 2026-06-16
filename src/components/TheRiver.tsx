@@ -23,54 +23,60 @@ import { forwardRef } from 'react'
 
 // ── Path ──────────────────────────────────────────────────────────────────────
 //
-// STRUCTURE:
-//   Entry path     → serves as Ring 1's LEFT arc (no separate left-side segment)
-//   Ring 1 right   → top → right → bottom  (stops at bottom — no left segment!)
-//   Crossing A     → Ring 1 bottom (720,560) → Ring 2 left (370,540)
-//                    Near-horizontal, stays near y=550-560, hidden by ring body.
-//                    NOT near AURENTUM (220,350).
-//   Ring 2         → full ellipse from left (clockwise)
-//   Crossing B     → Ring 2 left (370,540) → Ring 3 left (540,700)
-//                    Short S-curve in lower-left, shorter than the old Ring 1→2 crossing.
-//   Ring 3         → full ellipse from left (clockwise)
-//   Convergence    → tight arc to The Key (720,780)
+// Ring geometry (matches HeroFrame rings — fitted to actual planet positions):
+//   Ring 1 (gold):   cx=700  cy=365  rx=510  ry=165
+//   Ring 2 (indigo): cx=720  cy=535  rx=340  ry=105
+//   Ring 3 (red):    cx=720  cy=700  rx=145  ry=45
+//   The Key:         x=720   y=780
 //
-// All bezier quarter-arcs computed with k=0.5523 against the exact ring geometry.
+// Key points (k=0.5523 for bezier quarter-arc approximation):
+//   Ring 1 top=(700,200)  right=(1210,365)  bottom=(700,530)  left=(190,365)
+//   Ring 2 top=(720,430)  right=(1060,535)  bottom=(720,640)  left=(380,535)
+//   Ring 3 top=(720,655)  right=(865,700)   bottom=(720,745)  left=(575,700)
+//
+// STRUCTURE:
+//   Entry path → visually serves as Ring 1 left arc (off-screen → Ring 1 top)
+//   Ring 1     → top → right → bottom  (no separate left arc)
+//   Crossing A → Ring 1 bottom (700,530) → Ring 2 left (380,535)
+//                Near-horizontal at y≈532, hidden by Ring 1 body — NOT near AURENTUM
+//   Ring 2     → full ellipse from left (clockwise)
+//   Crossing B → Ring 2 left (380,535) → Ring 3 left (575,700)
+//   Ring 3     → full ellipse from left (clockwise)
+//   Key        → tight convergence to (720,780)
 
 const D = [
-  // Entry from upper-left — this IS Ring 1's visual left arc
+  // Entry — off-screen upper-left, serves as Ring 1's visual left arc
   'M -360 360',
-  'C  0 250, 400 196, 720 200',         // → Ring 1 top  (720, 200)
+  'C  0 252, 380 196, 700 200',         // → Ring 1 top  (700, 200)
 
-  // Ring 1: right half only (top → right → bottom)
-  // k=0.5523, rx=550, ry=180
-  'C 1024 200, 1270 281, 1270 380',     // top → right  (1270, 380)
-  'C 1270 479, 1024 560, 720  560',     // right → bottom (720, 560)
+  // Ring 1: top → right → bottom  [k=0.5523, rx=510, ry=165]
+  'C  982 200, 1210 274, 1210 365',     // top   → right  (1210, 365)
+  'C 1210 456,  982 530,  700 530',     // right → bottom  (700, 530)
 
   // ── Crossing A: Ring 1 bottom → Ring 2 left ───────────────────────────────
-  // (720,560) → (370,540): near-horizontal, at y≈550, hidden in Ring 1 body zone
-  'C 622 558, 386 546, 370 540',        // → Ring 2 left (370, 540)
+  // (700,530) → (380,535): nearly horizontal, y≈532, hidden in Ring 1 body zone
+  'C 600 530, 392 533, 380 535',        // → Ring 2 left (380, 535)
 
   // ── Ring 2: full ellipse from left (clockwise) ─────────────────────────────
-  // k=0.5523, rx=350, ry=110
-  'C 370 479, 527 430, 720 430',        // left → top  (720, 430)
-  'C 913 430, 1070 479, 1070 540',      // top → right (1070, 540)
-  'C 1070 601, 913 650, 720 650',       // right → bottom (720, 650)
-  'C 527 650, 370 601, 370 540',        // bottom → left  (370, 540)
+  // [k=0.5523, rx=340, ry=105]
+  'C 380 477,  532 430,  720 430',      // left   → top   (720, 430)
+  'C 908 430, 1060 477, 1060 535',      // top    → right (1060, 535)
+  'C 1060 593, 908 640,  720 640',      // right  → bottom (720, 640)
+  'C 532 640,  380 593,  380 535',      // bottom → left   (380, 535)
 
   // ── Crossing B: Ring 2 left → Ring 3 left ─────────────────────────────────
-  // (370,540) → (540,700): short S-curve in lower-left, ~185px
-  'C 376 584, 535 660, 540 700',        // → Ring 3 left (540, 700)
+  // (380,535) → (575,700): short S-curve ~251px, in lower-left
+  'C 386 578,  568 660,  575 700',      // → Ring 3 left (575, 700)
 
   // ── Ring 3: full ellipse from left (clockwise) ─────────────────────────────
-  // k=0.5523, rx=180, ry=50
-  'C 540 672, 621 650, 720 650',        // left → top  (720, 650)
-  'C 819 650, 900 672, 900 700',        // top → right (900, 700)
-  'C 900 728, 819 750, 720 750',        // right → bottom (720, 750)
-  'C 621 750, 540 728, 540 700',        // bottom → left  (540, 700)
+  // [k=0.5523, rx=145, ry=45]
+  'C 575 675,  640 655,  720 655',      // left   → top   (720, 655)
+  'C 800 655,  865 675,  865 700',      // top    → right  (865, 700)
+  'C 865 725,  800 745,  720 745',      // right  → bottom (720, 745)
+  'C 640 745,  575 725,  575 700',      // bottom → left   (575, 700)
 
   // ── Convergence → The Key (720, 780) ──────────────────────────────────────
-  'C 540 718, 660 778, 720 780',
+  'C 575 718,  660 778,  720 780',
 ].join(' ')
 
 

@@ -166,15 +166,14 @@ export function HeroFrame({ onPlanetClick }: HeroFrameProps) {
 
       {/* ── DEPTH 1: Orbital rings SVG ────────────────────────────────────── */}
       {/*
-        Ring geometry fitted to planet positions (viewBox 0 0 1440 900):
-          Ring 1 (gold)   — Layer 1 planets: Aurentum(220,350), Velmoris(1180,280),
-                            Drakmoor(950,510), Solenne(450,220)
-                            → cx=700 cy=365 rx=510 ry=165
-          Ring 2 (indigo) — Layer 2 planets: Mnemovex(420,500), Caelundra(1020,580),
-                            Vorrith(850,440), Othren(550,620)
-                            → cx=720 cy=535 rx=340 ry=105
-          Ring 3 (red)    — Layer 3 planets: Nullen(600,720), Erathis(820,680)
-                            → cx=720 cy=700 rx=145 ry=45
+        Ring geometry (viewBox 0 0 1440 900) — each layer's planets sit exactly
+        on their ring, nested into a funnel that narrows toward the Meridian:
+          Ring 1 (gold)   — Layer 1, outermost → cx=700 cy=365 rx=510 ry=165
+          Ring 2 (indigo) — Layer 2, mid       → cx=720 cy=535 rx=340 ry=105
+          Ring 3 (red)    — Layer 3, innermost → cx=720 cy=700 rx=145 ry=45
+        Planet x/y in data/planets.ts are derived from these ellipses (see
+        getPlanetById/getPlanetsByLayer call sites) — keep them in sync if
+        ring geometry changes.
       */}
       <svg
         ref={ringsRef as React.Ref<SVGSVGElement>}
@@ -189,6 +188,15 @@ export function HeroFrame({ onPlanetClick }: HeroFrameProps) {
           </filter>
           <filter id="ring-glow-sm" x="-20%" y="-80%" width="140%" height="260%">
             <feGaussianBlur stdDeviation="4" />
+          </filter>
+          <filter id="core-soft" x="-200%" y="-200%" width="500%" height="500%">
+            <feGaussianBlur stdDeviation="16" />
+          </filter>
+          <filter id="core-tight" x="-200%" y="-200%" width="500%" height="500%">
+            <feGaussianBlur stdDeviation="5" />
+          </filter>
+          <filter id="core-hot" x="-200%" y="-200%" width="500%" height="500%">
+            <feGaussianBlur stdDeviation="1.5" />
           </filter>
         </defs>
 
@@ -230,11 +238,66 @@ export function HeroFrame({ onPlanetClick }: HeroFrameProps) {
           fill="none" stroke="rgba(255,60,60,0.70)" strokeWidth="1.1" />
         <ellipse cx="720" cy="700" rx="145" ry="45"
           fill="none" stroke="rgba(255,160,160,0.20)" strokeWidth="0.4" />
+
+        {/* ── THE MERIDIAN CORE — singularity at the heart of Ring 3 ───────
+            Not a sun: small, dense, and deliberate — the convergence point
+            every layer funnels toward. Tight blur radii (vs. the planets'
+            120px atmospheric glow) keep it reading as focused, not diffuse. */}
+        <g aria-hidden="true">
+          <motion.circle
+            cx="720" cy="700" r="64"
+            fill="rgba(255,255,255,0.09)"
+            filter="url(#core-soft)"
+            animate={{ scale: [1, 1.22, 1], opacity: [0.5, 0.85, 0.5] }}
+            transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ transformOrigin: '720px 700px' }}
+          />
+          <motion.circle
+            cx="720" cy="700" r="32"
+            fill="rgba(220,130,255,0.40)"
+            filter="url(#core-tight)"
+            animate={{ scale: [1, 1.14, 1] }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
+            style={{ transformOrigin: '720px 700px' }}
+          />
+          <motion.g
+            animate={{ rotate: 360 }}
+            transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
+            style={{ transformOrigin: '720px 700px' }}
+          >
+            {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+              <line
+                key={deg}
+                x1="720" y1="700"
+                x2={720 + Math.cos((deg * Math.PI) / 180) * 56}
+                y2={700 + Math.sin((deg * Math.PI) / 180) * 56}
+                stroke="rgba(255,255,255,0.25)"
+                strokeWidth="0.6"
+              />
+            ))}
+          </motion.g>
+          <motion.circle
+            cx="720" cy="700" r="20"
+            fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth="0.8"
+            strokeDasharray="2 6"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
+            style={{ transformOrigin: '720px 700px' }}
+          />
+          <motion.circle
+            cx="720" cy="700" r="10"
+            fill="#FFFFFF"
+            filter="url(#core-hot)"
+            animate={{ scale: [1, 1.2, 1], opacity: [0.85, 1, 0.85] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ transformOrigin: '720px 700px' }}
+          />
+          <circle cx="720" cy="700" r="3.5" fill="#FFFFFF" />
+        </g>
       </svg>
 
       {/* ── DEPTH 2: The River — SVG spiral on same plane as planets ─── */}
-      {/* TheRiver hidden temporarily */}
-      {/* <TheRiver ref={riverRef} className="z-[8]" /> */}
+      <TheRiver ref={riverRef} className="z-[8]" />
 
       {/* ── Planets container (depth 3) ───────────────────────────────────── */}
       <div ref={planetsRef} className="absolute inset-0 will-change-transform">

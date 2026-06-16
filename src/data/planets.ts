@@ -5,7 +5,7 @@ export const ALL_PLANETS: Planet[] = [
     id: 'aurentum',
     name: 'AURENTUM',
     layer: 1,
-    x: 220, y: 350, size: 48,
+    x: 167, y: 351, size: 48,
     color1: '#F5C842', color2: '#8B5A00', glow: '#F5C842',
     delay: 0,
     lore: {
@@ -27,7 +27,7 @@ export const ALL_PLANETS: Planet[] = [
     id: 'velmoris',
     name: 'VELMORIS',
     layer: 1,
-    x: 1180, y: 280, size: 28,
+    x: 1152, y: 284, size: 28,
     color1: '#A3E635', color2: '#166534', glow: '#A3E635',
     delay: 1,
     lore: {
@@ -49,7 +49,7 @@ export const ALL_PLANETS: Planet[] = [
     id: 'drakmoor',
     name: 'DRAKMOOR',
     layer: 1,
-    x: 950, y: 510, size: 36,
+    x: 922, y: 493, size: 36,
     color1: '#0F172A', color2: '#020617', glow: '#2ECFCF',
     delay: 2,
     lore: {
@@ -71,7 +71,7 @@ export const ALL_PLANETS: Planet[] = [
     id: 'solenne',
     name: 'SOLENNE',
     layer: 1,
-    x: 450, y: 220, size: 16,
+    x: 439, y: 214, size: 16,
     color1: '#FFFFFF', color2: '#E2E8F0', glow: '#FFFFFF',
     delay: 3,
     lore: {
@@ -93,7 +93,7 @@ export const ALL_PLANETS: Planet[] = [
     id: 'mnemovex',
     name: 'MNEMOVEX',
     layer: 2,
-    x: 420, y: 500, size: 32,
+    x: 372, y: 497, size: 32,
     color1: '#E2E8F0', color2: '#7B2FBE', glow: '#7B2FBE',
     delay: 0.5,
     lore: {
@@ -115,7 +115,7 @@ export const ALL_PLANETS: Planet[] = [
     id: 'caelundra',
     name: 'CAELUNDRA',
     layer: 2,
-    x: 1020, y: 580, size: 40,
+    x: 984, y: 573, size: 40,
     color1: '#3B82F6', color2: '#1E3A8A', glow: '#3B82F6',
     delay: 1.5,
     lore: {
@@ -137,7 +137,7 @@ export const ALL_PLANETS: Planet[] = [
     id: 'vorrith',
     name: 'VORRITH',
     layer: 2,
-    x: 850, y: 440, size: 24,
+    x: 867, y: 430, size: 24,
     color1: '#D97706', color2: '#451A03', glow: '#D97706',
     delay: 2.5,
     lore: {
@@ -159,7 +159,7 @@ export const ALL_PLANETS: Planet[] = [
     id: 'othren',
     name: 'OTHREN',
     layer: 2,
-    x: 550, y: 620, size: 20,
+    x: 553, y: 618, size: 20,
     color1: '#22C55E', color2: '#475569', glow: '#22C55E',
     delay: 3.5,
     lore: {
@@ -181,7 +181,7 @@ export const ALL_PLANETS: Planet[] = [
     id: 'nullen',
     name: 'NULLEN',
     layer: 3,
-    x: 600, y: 720, size: 24,
+    x: 603, y: 719, size: 24,
     color1: '#000000', color2: '#000000', glow: '#FFFFFF',
     delay: 1,
     border: 'border border-white/40',
@@ -204,7 +204,7 @@ export const ALL_PLANETS: Planet[] = [
     id: 'erathis',
     name: 'ERATHIS',
     layer: 3,
-    x: 820, y: 680, size: 18,
+    x: 849, y: 677, size: 18,
     color1: '#FF2020', color2: '#7B2FBE', glow: '#FF2020',
     delay: 2,
     lore: {
