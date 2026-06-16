@@ -336,7 +336,8 @@ export function HeroFrame({ onPlanetClick }: HeroFrameProps) {
       </svg>
 
       {/* ── DEPTH 2: The River — SVG spiral on same plane as planets ─── */}
-      <TheRiver ref={riverRef} className="z-[8]" />
+      {/* TheRiver hidden temporarily */}
+      {/* <TheRiver ref={riverRef} className="z-[8]" /> */}
 
       {/* ── Planets container (depth 3) ───────────────────────────────────── */}
       {/*
