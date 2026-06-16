@@ -47,7 +47,7 @@ export function PlanetDetailModal({ planet, onClose, onDescend }: PlanetDetailMo
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       >
         <div
-          className="relative max-w-lg w-full mx-4 bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden pointer-events-auto"
+          className="relative max-w-lg w-full mx-4 bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden pointer-events-auto max-h-[90dvh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Top accent gradient bar */}
@@ -61,14 +61,14 @@ export function PlanetDetailModal({ planet, onClose, onDescend }: PlanetDetailMo
           <button
             onClick={onClose}
             aria-label="Close modal"
-            className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors duration-200 z-10 text-xl leading-none"
+            className="absolute top-3 right-3 md:top-4 md:right-4 w-8 h-8 flex items-center justify-center text-white/50 hover:text-white active:text-white transition-colors duration-200 z-10 text-xl leading-none rounded-full hover:bg-white/10"
           >
             ✕
           </button>
 
-          <div className="p-8">
+          <div className="p-5 md:p-8">
             {/* Planet orb preview */}
-            <div className="flex justify-center mb-6">
+            <div className="flex justify-center mb-4 md:mb-6">
               <motion.div
                 animate={{ y: [0, -8, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
@@ -77,8 +77,8 @@ export function PlanetDetailModal({ planet, onClose, onDescend }: PlanetDetailMo
                 <div
                   className="rounded-full relative"
                   style={{
-                    width: 80,
-                    height: 80,
+                    width: 64,
+                    height: 64,
                     background: `radial-gradient(circle at 30% 30%, ${planet.color1}, ${planet.color2}, #000)`,
                     boxShadow: `inset -4px -4px 10px rgba(0,0,0,0.8), 0 0 40px ${planet.glow}60, 0 0 80px ${planet.glow}20`,
                   }}
@@ -94,7 +94,7 @@ export function PlanetDetailModal({ planet, onClose, onDescend }: PlanetDetailMo
             {/* Planet name */}
             <h2
               id="planet-modal-title"
-              className="text-4xl font-light tracking-wider text-center text-white mb-1"
+              className="text-3xl md:text-4xl font-light tracking-wider text-center text-white mb-1"
             >
               {planet.name}
             </h2>
@@ -108,25 +108,25 @@ export function PlanetDetailModal({ planet, onClose, onDescend }: PlanetDetailMo
             </p>
 
             {/* Lore paragraphs */}
-            <div className="space-y-3 mb-6">
+            <div className="space-y-2 md:space-y-3 mb-4 md:mb-6">
               {planet.lore.description.map((para, i) => (
-                <p key={i} className="text-sm text-white/70 leading-relaxed">
+                <p key={i} className="text-xs md:text-sm text-white/70 leading-relaxed">
                   {para}
                 </p>
               ))}
             </div>
 
             {/* Stats grid */}
-            <div className="grid grid-cols-2 gap-3 mb-6">
+            <div className="grid grid-cols-2 gap-2 md:gap-3 mb-4 md:mb-6">
               {planet.lore.stats.map((stat, i) => (
                 <div
                   key={i}
-                  className="glass-panel rounded-lg p-3"
+                  className="glass-panel rounded-lg p-2 md:p-3"
                 >
-                  <div className="text-[9px] tracking-[0.2em] text-white/40 mb-1 uppercase">
+                  <div className="text-[8px] md:text-[9px] tracking-[0.2em] text-white/40 mb-1 uppercase">
                     {stat.label}
                   </div>
-                  <div className={`text-sm font-medium ${stat.color ?? 'text-white'}`}>
+                  <div className={`text-xs md:text-sm font-medium ${stat.color ?? 'text-white'}`}>
                     {stat.value}
                   </div>
                 </div>
