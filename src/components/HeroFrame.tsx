@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { ALL_PLANETS } from '../data/planets'
+import { TheRiver } from './TheRiver'
 import type { Planet } from '../types'
 
 // ─── Planet Orb sub-component ────────────────────────────────────────────────
@@ -164,6 +165,17 @@ export function HeroFrame({ onPlanetClick }: HeroFrameProps) {
       </div>
 
       {/* ── DEPTH 1: Orbital rings SVG ────────────────────────────────────── */}
+      {/*
+        Ring geometry fitted to planet positions (viewBox 0 0 1440 900):
+          Ring 1 (gold)   — Layer 1 planets: Aurentum(220,350), Velmoris(1180,280),
+                            Drakmoor(950,510), Solenne(450,220)
+                            → cx=700 cy=365 rx=510 ry=165
+          Ring 2 (indigo) — Layer 2 planets: Mnemovex(420,500), Caelundra(1020,580),
+                            Vorrith(850,440), Othren(550,620)
+                            → cx=720 cy=535 rx=340 ry=105
+          Ring 3 (red)    — Layer 3 planets: Nullen(600,720), Erathis(820,680)
+                            → cx=720 cy=700 rx=145 ry=45
+      */}
       <svg
         ref={ringsRef as React.Ref<SVGSVGElement>}
         className="absolute inset-0 w-full h-full will-change-transform"
@@ -172,125 +184,57 @@ export function HeroFrame({ onPlanetClick }: HeroFrameProps) {
         aria-hidden="true"
       >
         <defs>
-          <radialGradient id="ringGrad1" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#F5C842" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#F5C842" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="ringGrad2" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#2ECFCF" stopOpacity="0.10" />
-            <stop offset="100%" stopColor="#2ECFCF" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-
-        {/* Large outer ring */}
-        <ellipse
-          cx="720"
-          cy="450"
-          rx="680"
-          ry="200"
-          fill="none"
-          stroke="rgba(245,200,66,0.06)"
-          strokeWidth="1"
-        />
-        {/* Mid ring */}
-        <ellipse
-          cx="720"
-          cy="450"
-          rx="480"
-          ry="140"
-          fill="none"
-          stroke="rgba(245,200,66,0.10)"
-          strokeWidth="0.5"
-        />
-        {/* Inner ring */}
-        <ellipse
-          cx="720"
-          cy="450"
-          rx="280"
-          ry="80"
-          fill="none"
-          stroke="rgba(46,207,207,0.08)"
-          strokeWidth="0.5"
-        />
-        {/* Teal outer arc */}
-        <ellipse
-          cx="720"
-          cy="450"
-          rx="820"
-          ry="240"
-          fill="none"
-          stroke="rgba(46,207,207,0.04)"
-          strokeWidth="1"
-        />
-
-        {/* Ring glow fills */}
-        <ellipse cx="720" cy="450" rx="680" ry="200" fill="url(#ringGrad1)" opacity="0.3" />
-      </svg>
-
-      {/* ── DEPTH 2: The River path SVG ───────────────────────────────────── */}
-      <svg
-        ref={riverRef as React.Ref<SVGSVGElement>}
-        className="absolute inset-0 w-full h-full will-change-transform"
-        viewBox="0 0 1440 900"
-        preserveAspectRatio="xMidYMid slice"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient id="riverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#F5C842" stopOpacity="0" />
-            <stop offset="25%" stopColor="#F5C842" stopOpacity="0.6" />
-            <stop offset="50%" stopColor="#2ECFCF" stopOpacity="0.5" />
-            <stop offset="75%" stopColor="#7B2FBE" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#FF2020" stopOpacity="0" />
-          </linearGradient>
-          <filter id="riverBlur">
-            <feGaussianBlur stdDeviation="2" />
+          <filter id="ring-haze" x="-30%" y="-100%" width="160%" height="300%">
+            <feGaussianBlur stdDeviation="12" />
+          </filter>
+          <filter id="ring-glow-sm" x="-20%" y="-80%" width="140%" height="260%">
+            <feGaussianBlur stdDeviation="4" />
           </filter>
         </defs>
 
-        {/* Primary river path */}
-        <path
-          d="M -100 600 Q 200 500 400 450 Q 600 400 720 380 Q 900 360 1100 320 Q 1300 280 1540 200"
-          fill="none"
-          stroke="url(#riverGrad)"
-          strokeWidth="2"
-          filter="url(#riverBlur)"
-          className="animate-flow"
-          strokeDasharray="1000"
-        />
-        {/* Secondary river thread */}
-        <path
-          d="M -100 620 Q 200 520 400 470 Q 600 420 720 400 Q 900 380 1100 340 Q 1300 300 1540 220"
-          fill="none"
-          stroke="url(#riverGrad)"
-          strokeWidth="0.5"
-          opacity="0.4"
-          className="animate-flow"
-          strokeDasharray="1000"
-          style={{ animationDelay: '2s' }}
-        />
+        {/* ── Ring 1: GOLD — Layer 1 planets (outermost) ───────────────────── */}
+        {/* cx=700 cy=365 rx=510 ry=165 */}
+        <ellipse cx="700" cy="365" rx="510" ry="165"
+          fill="none" stroke="rgba(245,200,66,0.28)" strokeWidth="18"
+          filter="url(#ring-haze)" />
+        <ellipse cx="700" cy="365" rx="510" ry="165"
+          fill="none" stroke="rgba(245,200,66,0.18)" strokeWidth="4"
+          filter="url(#ring-glow-sm)" />
+        <ellipse cx="700" cy="365" rx="510" ry="165"
+          fill="none" stroke="rgba(245,200,66,0.55)" strokeWidth="1" />
+        <ellipse cx="700" cy="365" rx="510" ry="165"
+          fill="none" stroke="rgba(255,235,130,0.20)" strokeWidth="0.4" />
 
-        {/* Meridian convergence point indicator */}
-        <circle
-          cx="720"
-          cy="380"
-          r="3"
-          fill="#F5C842"
-          opacity="0.8"
-          className="animate-pulse-glow"
-        />
-        <circle
-          cx="720"
-          cy="380"
-          r="10"
-          fill="none"
-          stroke="#F5C842"
-          strokeWidth="0.5"
-          opacity="0.4"
-          className="animate-pulse-ring"
-          style={{ transformOrigin: '720px 380px' }}
-        />
+        {/* ── Ring 2: INDIGO — Layer 2 planets (mid) ───────────────────────── */}
+        {/* cx=720 cy=535 rx=340 ry=105 */}
+        <ellipse cx="720" cy="535" rx="340" ry="105"
+          fill="none" stroke="rgba(99,60,220,0.30)" strokeWidth="16"
+          filter="url(#ring-haze)" />
+        <ellipse cx="720" cy="535" rx="340" ry="105"
+          fill="none" stroke="rgba(99,60,220,0.20)" strokeWidth="4"
+          filter="url(#ring-glow-sm)" />
+        <ellipse cx="720" cy="535" rx="340" ry="105"
+          fill="none" stroke="rgba(130,90,255,0.60)" strokeWidth="1" />
+        <ellipse cx="720" cy="535" rx="340" ry="105"
+          fill="none" stroke="rgba(200,180,255,0.18)" strokeWidth="0.4" />
+
+        {/* ── Ring 3: RED — Layer 3 planets (innermost) ────────────────────── */}
+        {/* cx=720 cy=700 rx=145 ry=45 */}
+        <ellipse cx="720" cy="700" rx="145" ry="45"
+          fill="none" stroke="rgba(220,40,40,0.34)" strokeWidth="14"
+          filter="url(#ring-haze)" />
+        <ellipse cx="720" cy="700" rx="145" ry="45"
+          fill="none" stroke="rgba(220,40,40,0.22)" strokeWidth="4"
+          filter="url(#ring-glow-sm)" />
+        <ellipse cx="720" cy="700" rx="145" ry="45"
+          fill="none" stroke="rgba(255,60,60,0.70)" strokeWidth="1.1" />
+        <ellipse cx="720" cy="700" rx="145" ry="45"
+          fill="none" stroke="rgba(255,160,160,0.20)" strokeWidth="0.4" />
       </svg>
+
+      {/* ── DEPTH 2: The River — SVG spiral on same plane as planets ─── */}
+      {/* TheRiver hidden temporarily */}
+      {/* <TheRiver ref={riverRef} className="z-[8]" /> */}
 
       {/* ── Planets container (depth 3) ───────────────────────────────────── */}
       <div ref={planetsRef} className="absolute inset-0 will-change-transform">

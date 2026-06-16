@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { motion } from 'framer-motion'
 
 interface FrameSwitcherProps {
@@ -6,14 +6,13 @@ interface FrameSwitcherProps {
   setFrame: (index: number) => void
 }
 
-const frames = [
-  { id: 0, label: 'HERO',     color: 'bg-layer1',      text: 'text-layer1' },
-  { id: 1, label: 'PLANET',   color: 'bg-layer1',      text: 'text-layer1' },
-  { id: 2, label: 'MERIDIAN', color: 'bg-white',       text: 'text-white' },
-  { id: 3, label: 'LAYER 2',  color: 'bg-layer2-teal', text: 'text-layer2-teal' },
-]
-
 export function FrameSwitcher({ currentFrame, setFrame }: FrameSwitcherProps) {
+  const frames = [
+    { id: 0, label: 'HERO',     color: 'bg-layer1',       text: 'text-layer1' },
+    { id: 1, label: 'MERIDIAN', color: 'bg-white',         text: 'text-white' },
+    { id: 2, label: 'LAYER 2',  color: 'bg-layer2-teal',   text: 'text-layer2-teal' },
+  ]
+
   const swipeStartX = useRef<number | null>(null)
 
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -23,13 +22,12 @@ export function FrameSwitcher({ currentFrame, setFrame }: FrameSwitcherProps) {
   const handlePointerUp = (e: React.PointerEvent) => {
     if (swipeStartX.current === null) return
     const delta = swipeStartX.current - e.clientX
-    if (delta > 60 && currentFrame < 3) setFrame(currentFrame + 1)
+    if (delta > 60 && currentFrame < 2) setFrame(currentFrame + 1)
     else if (delta < -60 && currentFrame > 0) setFrame(currentFrame - 1)
     swipeStartX.current = null
   }
 
   const frameNum = String(currentFrame + 1).padStart(2, '0')
-  const totalNum = '04'
 
   return (
     <div
@@ -38,25 +36,23 @@ export function FrameSwitcher({ currentFrame, setFrame }: FrameSwitcherProps) {
       onPointerUp={handlePointerUp}
     >
       {/* Progress bar */}
-      <div className="w-[280px] h-[1px] bg-white/10 rounded-full overflow-hidden">
+      <div className="w-[240px] h-[1px] bg-white/10 rounded-full overflow-hidden">
         <motion.div
           className="h-full bg-white/50 rounded-full"
-          animate={{ width: `${(currentFrame / 3) * 100}%` }}
+          animate={{ width: `${(currentFrame / 2) * 100}%` }}
           transition={{ duration: 0.6, ease: 'easeInOut' }}
         />
       </div>
 
-      {/* Nav bar */}
+      {/* Nav pill */}
       <div className="glass-panel px-6 py-3 rounded-full flex items-center gap-4">
         {/* Frame counter */}
-        <span className="font-mono text-[10px] text-white/30 tracking-widest w-10 shrink-0">
-          {frameNum}&nbsp;/&nbsp;{totalNum}
+        <span className="font-mono text-[10px] text-white/30 tracking-widest w-10">
+          {frameNum} / 03
         </span>
 
-        {/* Divider */}
-        <div className="w-[1px] h-4 bg-white/10 shrink-0" aria-hidden="true" />
+        <div className="w-[1px] h-4 bg-white/10" />
 
-        {/* Frame buttons */}
         {frames.map((frame) => {
           const isActive = currentFrame === frame.id
           return (
@@ -74,7 +70,6 @@ export function FrameSwitcher({ currentFrame, setFrame }: FrameSwitcherProps) {
                 <motion.div
                   layoutId="activeIndicator"
                   className={`absolute -bottom-2 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full ${frame.color}`}
-                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                 />
               )}
             </button>
