@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { ALL_PLANETS } from '../data/planets'
-import { TheRiver } from './TheRiver'
 import type { Planet } from '../types'
 
 // SVG scene dimensions (must match viewBox)
@@ -77,15 +76,15 @@ function PlanetOrb({
 // ─── HeroFrame ────────────────────────────────────────────────────────────────
 interface HeroFrameProps {
   onPlanetClick: (planet: Planet) => void
+  onKeyClick: () => void
 }
 
-export function HeroFrame({ onPlanetClick }: HeroFrameProps) {
+export function HeroFrame({ onPlanetClick, onKeyClick }: HeroFrameProps) {
   const mouseRef = useRef({ x: 0, y: 0 })
   const lerpRef = useRef({ x: 0, y: 0 })
   const frameRef = useRef<number>()
   const bgRef = useRef<HTMLDivElement>(null)
   const ringsRef = useRef<SVGSVGElement>(null)
-  const riverRef = useRef<SVGSVGElement>(null)
   const planetsRef = useRef<HTMLDivElement>(null)
   // Outer wrapper that replicates xMidYMid slice coordinate mapping for planets
   const planetSceneRef = useRef<HTMLDivElement>(null)
@@ -131,9 +130,6 @@ export function HeroFrame({ onPlanetClick }: HeroFrameProps) {
       }
       if (ringsRef.current) {
         ringsRef.current.style.transform = `translate(${lx * 15}px, ${ly * 15}px)`
-      }
-      if (riverRef.current) {
-        riverRef.current.style.transform = `translate(${lx * 20}px, ${ly * 20}px)`
       }
       if (planetsRef.current) {
         // Divide by scale so the screen-pixel displacement matches the rings
@@ -335,9 +331,7 @@ export function HeroFrame({ onPlanetClick }: HeroFrameProps) {
         </g>
       </svg>
 
-      {/* ── DEPTH 2: The River — SVG spiral on same plane as planets ─── */}
-      {/* TheRiver hidden temporarily */}
-      {/* <TheRiver ref={riverRef} className="z-[8]" /> */}
+
 
       {/* ── Planets container (depth 3) ───────────────────────────────────── */}
       {/*
@@ -365,6 +359,27 @@ export function HeroFrame({ onPlanetClick }: HeroFrameProps) {
               onClick={() => onPlanetClick(planet)}
             />
           ))}
+
+          {/*
+            Clickable hit zone over The Key / Meridian Core.
+            Positioned at SVG coords (720, 700) — the same cx/cy used for
+            the Meridian circle in the rings SVG layer.
+            translate(-50%,-50%) centres it on that point.
+          */}
+          <button
+            onClick={onKeyClick}
+            aria-label="Explore The Key"
+            className="absolute group"
+            style={{ left: 720, top: 700, transform: 'translate(-50%, -50%)' }}
+          >
+            {/* Expanding pulse ring — visible hint */}
+            <span className="absolute inset-0 rounded-full animate-ping opacity-30"
+              style={{ background: 'rgba(200,130,255,0.4)', animationDuration: '2.5s' }} />
+            {/* Hover glow ring */}
+            <span className="absolute -inset-3 rounded-full border border-white/0 group-hover:border-white/20 transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(200,130,255,0.4)]" />
+            {/* Invisible tap area */}
+            <span className="block w-12 h-12 rounded-full" />
+          </button>
         </div>
       </div>
 
@@ -396,21 +411,24 @@ export function HeroFrame({ onPlanetClick }: HeroFrameProps) {
           transition={{ duration: 0.8, delay: 0.3 }}
         >
           <div className="text-[8px] md:text-[9px] tracking-[0.3em] md:tracking-[0.4em] text-white/30 mb-1">BVO EXPERIENCE</div>
-          <div className="text-[8px] md:text-[9px] tracking-[0.3em] md:tracking-[0.4em] text-layer1/60">THE FAMILIAR SKIES</div>
+          <div className="text-[8px] md:text-[9px] tracking-[0.3em] md:tracking-[0.4em] text-layer1/60">THE RIVER</div>
         </motion.div>
       </div>
 
-      {/* Main title */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 text-center pointer-events-none">
+      {/* Main title — sits above the orbital scene so it stays legible against the rings */}
+      <div className="absolute top-16 md:top-20 inset-x-0 z-30 text-center pointer-events-none">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2 }}
         >
-          <h1 className="text-[10px] md:text-[11px] tracking-[0.5em] md:tracking-[0.6em] text-white/20 mb-3 md:mb-4 font-light">
-            THE FAMILIAR SKIES
+          <h1
+            className="text-xl md:text-3xl tracking-[0.3em] md:tracking-[0.4em] text-white/90 mb-2 md:mb-3 font-light"
+            style={{ textShadow: '0 0 30px rgba(245,200,66,0.5), 0 0 60px rgba(0,0,0,0.8)' }}
+          >
+            THE RIVER
           </h1>
-          <div className="text-[8px] md:text-[9px] tracking-[0.25em] md:tracking-[0.3em] text-layer1/40">
+          <div className="text-[10px] md:text-xs tracking-[0.3em] md:tracking-[0.35em] text-layer1/80">
             SELECT A WORLD TO EXPLORE
           </div>
         </motion.div>

@@ -1,3 +1,5 @@
+import type { Faction } from '../data/factions'
+
 export interface Planet {
   id: string
   name: string
@@ -37,10 +39,16 @@ export type AppAction =
   | { type: 'SET_FRAME'; payload: number }
   | { type: 'SET_PLANET'; payload: Planet | null }
   | { type: 'CLOSE_MODAL' }
+  | { type: 'OPEN_KEY' }
+  | { type: 'CLOSE_KEY' }
+  | { type: 'OPEN_FACTION'; payload: Faction }
+  | { type: 'CLOSE_FACTION' }
   | { type: 'SET_TRANSITIONING'; payload: boolean }
 
 export interface AppState {
   currentFrame: number
   selectedPlanet: Planet | null
+  selectedFaction: Faction | null
+  showKey: boolean
   isTransitioning: boolean
 }
